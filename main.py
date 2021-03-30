@@ -1,13 +1,14 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from prediction import nlp
-from files.token import token_prive
-from fastapi.logger import logger
-import logging
 import os
 import sys
-from uvicorn import Config, Server
+import logging
 from loguru import logger
+from prediction import nlp
+from fastapi import FastAPI
+from pydantic import BaseModel
+from fastapi.logger import logger
+from uvicorn import Config, Server
+from files.token import token_prive
+
 
 logger.add("out.log", backtrace=True, diagnose=True)
 
