@@ -1,16 +1,16 @@
 import os
 import sys
 import logging
-from loguru import logger
 from prediction import nlp
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.logger import logger
 from uvicorn import Config, Server
-from files.token import token_prive
+from files.token import TOKEN_PRIVE
+#from tests import test
+from loguru import logger
 
-
-logger.add("out.log", backtrace=True, diagnose=True)
+logger.add("Logs/out.log", backtrace=True, diagnose=True)
 
 app = FastAPI()
 
@@ -64,19 +64,21 @@ async def read_root():
 @app.post("/sentiment")
 async def read_item(item: Item):
     token = item.token
+    print(token)
     text = item.text
-    logger.warning(f"L'utilisateur a entré le token {token}, et le text {text}")
+    print(text)
+    logger.WARNING(f"L'utilisateur a entré le token {token}, et le text {text}")
 
     # checking if token is the good one
-    if token != token_prive:
-        logger.error(f"L'utilisateur a entré un mauvais token {token}")
+    if token != TOKEN_PRIVE:
+        logger.ERROR(f"L'utilisateur a entré un mauvais token {token}")
         return {
             "Message": "Token Invalide",
             "Status Code": 401
         }
     else:
         prediction = nlp(text)[0]['label'].capitalize()
-        logger.waring(f"La prédiciton de  {text} est {prediction}")
+        logger.WARNING(f"La prédiciton de  {text} est {prediction}")
         return {
             "text": text,
             "prediction": prediction,
@@ -85,6 +87,7 @@ async def read_item(item: Item):
 
 
 if __name__ == '__main__':
+    
     server = Server(
         Config(
             "main:app",
@@ -95,12 +98,6 @@ if __name__ == '__main__':
             log_level=LOG_LEVEL,
         ),
     )
-    # setup logging last, to make sure no library overwrites it
-    # (they shouldn't, but it happens)
+
     setup_logging()
     server.run()
-
-#if __name__ == "__main__":
-#    import uvicorn
-
-#    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True, debug=True)

@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+from prediction import nlp
 
-from .context import sample
 
 import unittest
 
+class PredictionTest(unittest.TestCase):
 
-class BasicTestSuite(unittest.TestCase):
-    """Basic test cases."""
+    def test_positive(self):
+        comment = "J'aime ça"
+        prediction = nlp(comment)[0]['label'].capitalize()
+        self.assertEqual(prediction, 'Positive')
 
-    def test_absolute_truth_and_meaning(self):
-        assert True
-
-    def test_thoughts(self):
-        self.assertIsNone(sample.hmm())
+    def test_negative(self):
+        comment = "c'est triste de voir ça"
+        prediction = nlp(comment)[0]['label'].capitalize()
+        self.assertEqual(prediction, 'Negative')
 
 
 if __name__ == '__main__':
