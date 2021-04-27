@@ -63,6 +63,7 @@ async def read_root():
 
 @app.post("/sentiment")
 async def read_item(item: Item):
+    
     token = item.token
     print(token)
     text = item.text
